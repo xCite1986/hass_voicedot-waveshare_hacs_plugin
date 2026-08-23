@@ -37,6 +37,21 @@ eintragen, etwa `voicedot.local`.
 > Voraussetzung ist Firmware **v0.7.0** oder neuer — ältere Stände melden weder
 > den mDNS-Dienst noch die Geräte-ID.
 
+### Adresse ändern
+
+Bei der Erkennung wird bevorzugt der **mDNS-Name** übernommen
+(`voicedotone.local`) — der überlebt einen Wechsel der IP-Adresse. Kann Home
+Assistant `.local` nicht auflösen, was in Containern ohne Host-Netzwerk
+vorkommt, wird automatisch auf die IP-Adresse zurückgefallen.
+
+Nachträglich ändern lässt sich das über **Einstellungen → Geräte & Dienste →
+VoiceDot → Konfigurieren**. Die Adresse wird vor dem Speichern geprüft, und die
+Integration lädt sich danach selbst neu.
+
+Wird ein bereits eingerichteter VoiceDot erneut per mDNS gemeldet, aktualisiert
+die Integration die hinterlegte Adresse von selbst — ein mit IP angelegter
+Eintrag wandert dadurch mit der Zeit auf den Namen.
+
 ---
 
 ## Entitäten

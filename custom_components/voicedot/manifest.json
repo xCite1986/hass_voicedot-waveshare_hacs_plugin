@@ -1,13 +1,17 @@
 {
   "domain": "voicedot",
   "name": "VoiceDot Waveshare",
-  "codeowners": ["@xCite1986"],
+  "codeowners": [
+    "@xCite1986"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/xCite1986/hass_voicedot-waveshare_hacs_plugin",
   "integration_type": "device",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/xCite1986/hass_voicedot-waveshare_hacs_plugin/issues",
   "requirements": [],
-  "version": "1.0.0",
-  "zeroconf": ["_voicedot._tcp.local."]
+  "version": "1.1.0",
+  "zeroconf": [
+    "_voicedot._tcp.local."
+  ]
 }

@@ -5,14 +5,18 @@
       "user": {
         "title": "VoiceDot hinzufügen",
         "description": "Hostname oder IP-Adresse des VoiceDot.",
-        "data": { "host": "Host" }
+        "data": {
+          "host": "Host"
+        }
       },
       "confirm": {
         "title": "VoiceDot gefunden",
         "description": "{name} unter {host} hinzufügen?"
       }
     },
-    "error": { "cannot_connect": "Keine Verbindung – antwortet das Gerät unter /api/status?" },
+    "error": {
+      "cannot_connect": "Keine Verbindung – antwortet das Gerät unter /api/status?"
+    },
     "abort": {
       "already_configured": "Dieser VoiceDot ist bereits eingerichtet.",
       "cannot_connect": "Keine Verbindung zum Gerät."
@@ -22,7 +26,26 @@
     "announce": {
       "name": "Ansage",
       "description": "Lässt VoiceDot einen Text sprechen.",
-      "fields": { "text": { "name": "Text", "description": "Der zu sprechende Text." } }
+      "fields": {
+        "text": {
+          "name": "Text",
+          "description": "Der zu sprechende Text."
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "VoiceDot-Adresse",
+        "description": "Aktuell: {current}. Ein mDNS-Name wie voicedotone.local überlebt einen Wechsel der IP-Adresse — er setzt aber voraus, dass Home Assistant .local-Namen auflösen kann.",
+        "data": {
+          "host": "Host"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unter dieser Adresse antwortet kein VoiceDot."
     }
   }
 }
