@@ -1,0 +1,16 @@
+announce:
+  name: Ansage
+  description: >-
+    Lässt einen oder mehrere VoiceDots einen Text sprechen. Ohne Ziel sprechen
+    alle bekannten Geräte.
+  target:
+    device:
+      integration: voicedot
+  fields:
+    text:
+      name: Text
+      description: Der zu sprechende Text.
+      required: true
+      example: "DING DONG! Es hat geläutet"
+      selector:
+        text:

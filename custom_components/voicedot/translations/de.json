@@ -1,0 +1,28 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "VoiceDot hinzufügen",
+        "description": "Hostname oder IP-Adresse des VoiceDot.",
+        "data": { "host": "Host" }
+      },
+      "confirm": {
+        "title": "VoiceDot gefunden",
+        "description": "{name} unter {host} hinzufügen?"
+      }
+    },
+    "error": { "cannot_connect": "Keine Verbindung – antwortet das Gerät unter /api/status?" },
+    "abort": {
+      "already_configured": "Dieser VoiceDot ist bereits eingerichtet.",
+      "cannot_connect": "Keine Verbindung zum Gerät."
+    }
+  },
+  "services": {
+    "announce": {
+      "name": "Ansage",
+      "description": "Lässt VoiceDot einen Text sprechen.",
+      "fields": { "text": { "name": "Text", "description": "Der zu sprechende Text." } }
+    }
+  }
+}
