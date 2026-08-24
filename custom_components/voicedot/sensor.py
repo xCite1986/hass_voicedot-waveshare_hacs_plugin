@@ -13,7 +13,12 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EntityCategory, SIGNAL_STRENGTH_DECIBELS_MILLIWATT, UnitOfTime
+from homeassistant.const import (
+    EntityCategory,
+    SIGNAL_STRENGTH_DECIBELS,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    UnitOfTime,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -37,6 +42,37 @@ class VoiceDotSensorDescription(SensorEntityDescription):
 
 
 SENSORS: tuple[VoiceDotSensorDescription, ...] = (
+    VoiceDotSensorDescription(
+        key="radio",
+        name="Radio",
+        icon="mdi:radio",
+        value=lambda d: (
+            _dig(d, "radio", "station") if _dig(d, "radio", "active") else "aus"
+        ),
+    ),
+    VoiceDotSensorDescription(
+        key="volume_boost",
+        name="Lautstärke-Anhebung",
+        icon="mdi:volume-plus",
+        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS,
+        state_class=SensorStateClass.MEASUREMENT,
+        value=lambda d: _dig(d, "auto_volume", "boost_db"),
+    ),
+    VoiceDotSensorDescription(
+        key="multi_peers",
+        name="Nachbar-VoiceDots",
+        icon="mdi:account-group",
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value=lambda d: len(_dig(d, "multi", "peers") or []),
+    ),
+    VoiceDotSensorDescription(
+        key="led_phase",
+        name="Leuchtring",
+        icon="mdi:led-on",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value=lambda d: _dig(d, "hardware", "led_phase"),
+    ),
     VoiceDotSensorDescription(
         key="state",
         name="Status",

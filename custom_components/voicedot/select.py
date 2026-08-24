@@ -17,7 +17,13 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator: VoiceDotCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([VoiceDotWakeWordSelect(coordinator), VoiceDotPipelineSelect(coordinator)])
+    async_add_entities(
+        [
+            VoiceDotWakeWordSelect(coordinator),
+            VoiceDotPipelineSelect(coordinator),
+            VoiceDotRadioSelect(coordinator),
+        ]
+    )
 
 
 class VoiceDotWakeWordSelect(VoiceDotEntity, SelectEntity):
@@ -94,3 +100,50 @@ class VoiceDotPipelineSelect(VoiceDotEntity, SelectEntity):
                     self.coordinator.client.set_config(ha_pipeline=pipeline["id"])
                 )
                 return
+
+
+class VoiceDotRadioSelect(VoiceDotEntity, SelectEntity):
+    """The station list of the device, with "Aus" as the way to stop it.
+
+    One control rather than a switch plus a picker: turning the radio on always
+    means picking a station anyway.
+    """
+
+    _attr_name = "Radio"
+    _attr_icon = "mdi:radio"
+
+    OFF = "Aus"
+
+    def __init__(self, coordinator: VoiceDotCoordinator) -> None:
+        super().__init__(coordinator, "radio_station")
+
+    def _radio(self) -> dict:
+        return (self.coordinator.data or {}).get("radio") or {}
+
+    @property
+    def options(self) -> list[str]:
+        return [self.OFF] + list(self._radio().get("stations") or [])
+
+    @property
+    def current_option(self) -> str | None:
+        radio = self._radio()
+        if not radio.get("active"):
+            return self.OFF
+        return radio.get("station") or self.OFF
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        radio = self._radio()
+        return {
+            "status": radio.get("status"),
+            "tls": radio.get("tls"),
+            "stream_rate_hz": radio.get("rate"),
+            "received_kbytes": radio.get("kbytes"),
+            "seconds": radio.get("seconds"),
+        }
+
+    async def async_select_option(self, option: str) -> None:
+        if option == self.OFF:
+            await self.coordinator.async_command(self.coordinator.client.radio_stop())
+            return
+        await self.coordinator.async_command(self.coordinator.client.radio_play(option))

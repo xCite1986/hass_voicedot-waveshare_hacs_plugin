@@ -39,6 +39,10 @@ BUTTONS: tuple[VoiceDotButtonDescription, ...] = (
         action=lambda c: c.client.speaker_test(), entity_category=EntityCategory.DIAGNOSTIC,
     ),
     VoiceDotButtonDescription(
+        key="update_check", name="Nach Updates suchen", icon="mdi:cloud-search",
+        action=lambda c: c.client.update_check(), entity_category=EntityCategory.CONFIG,
+    ),
+    VoiceDotButtonDescription(
         key="reboot", name="Neu starten", icon="mdi:restart",
         action=lambda c: c.client.reboot(), entity_category=EntityCategory.DIAGNOSTIC,
     ),

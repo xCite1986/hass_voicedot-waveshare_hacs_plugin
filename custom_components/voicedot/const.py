@@ -21,6 +21,8 @@ API_ACK_BUILD = "/api/ack/build"
 API_WAKE = "/api/assist/wake"
 API_SPEAKER_TEST = "/api/audio/speaker-test"
 API_REBOOT = "/api/system/reboot"
+API_RADIO_PLAY = "/api/radio/play"
+API_RADIO_STOP = "/api/radio/stop"
 API_UPDATE_CHECK = "/api/update/check"
 API_UPDATE_INSTALL = "/api/update/install"
 

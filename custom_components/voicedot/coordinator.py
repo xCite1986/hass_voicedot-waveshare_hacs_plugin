@@ -18,6 +18,8 @@ from .const import (
     API_ANNOUNCE,
     API_CONFIG,
     API_REBOOT,
+    API_RADIO_PLAY,
+    API_RADIO_STOP,
     API_UPDATE_CHECK,
     API_UPDATE_INSTALL,
     API_RUNTIME,
@@ -91,6 +93,12 @@ class VoiceDotClient:
 
     async def reboot(self) -> str:
         return await self._post(API_REBOOT)
+
+    async def radio_play(self, name: str) -> str:
+        return await self._post(API_RADIO_PLAY, {"name": name})
+
+    async def radio_stop(self) -> str:
+        return await self._post(API_RADIO_STOP)
 
     async def update_check(self) -> str:
         return await self._post(API_UPDATE_CHECK)

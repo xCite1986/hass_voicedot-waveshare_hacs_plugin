@@ -52,6 +52,21 @@ SWITCHES: tuple[VoiceDotSwitchDescription, ...] = (
         config_key="clean_markdown", api_key="clean_markdown",
         entity_category=EntityCategory.CONFIG,
     ),
+    VoiceDotSwitchDescription(
+        key="multi", name="Aushandlung mit anderen VoiceDots", icon="mdi:account-group",
+        config_key="multi_enabled", api_key="multi_enabled",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    VoiceDotSwitchDescription(
+        key="auto_volume", name="Lautstärke nach Umgebungslärm", icon="mdi:volume-vibrate",
+        config_key="auto_volume", api_key="auto_volume",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    VoiceDotSwitchDescription(
+        key="update_check", name="Selbst nach Updates sehen", icon="mdi:cloud-search",
+        config_key="update_check", api_key="update_check",
+        entity_category=EntityCategory.CONFIG,
+    ),
 )
 
 
