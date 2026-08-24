@@ -35,7 +35,11 @@ class VoiceDotUpdate(VoiceDotEntity, UpdateEntity):
     """
 
     _attr_name = "Firmware"
-    _attr_supported_features = UpdateEntityFeature.INSTALL
+    # Without PROGRESS, Home Assistant never reads in_progress or
+    # update_percentage at all.
+    _attr_supported_features = (
+        UpdateEntityFeature.INSTALL | UpdateEntityFeature.PROGRESS
+    )
     _attr_title = "VoiceDot"
 
     def __init__(self, coordinator: VoiceDotCoordinator) -> None:
