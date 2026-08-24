@@ -18,6 +18,8 @@ from .const import (
     API_ANNOUNCE,
     API_CONFIG,
     API_REBOOT,
+    API_UPDATE_CHECK,
+    API_UPDATE_INSTALL,
     API_RUNTIME,
     API_SPEAKER_TEST,
     API_STATUS,
@@ -89,6 +91,12 @@ class VoiceDotClient:
 
     async def reboot(self) -> str:
         return await self._post(API_REBOOT)
+
+    async def update_check(self) -> str:
+        return await self._post(API_UPDATE_CHECK)
+
+    async def update_install(self, tag: str) -> str:
+        return await self._post(API_UPDATE_INSTALL, {"tag": tag})
 
 
 class VoiceDotCoordinator(DataUpdateCoordinator[dict[str, Any]]):

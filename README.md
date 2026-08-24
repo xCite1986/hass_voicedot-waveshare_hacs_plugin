@@ -58,6 +58,17 @@ Eintrag wandert dadurch mit der Zeit auf den Namen.
 
 Pro Gerät entstehen:
 
+### Firmware-Update
+
+Eine `update`-Entitaet zeigt installierte und verfuegbare Version und bietet
+den Installieren-Knopf. Die Versionen kommen aus dem Zwischenspeicher des
+Geraets, nicht direkt von GitHub: unangemeldet erlaubt deren API 60 Anfragen
+pro Stunde und Adresse, und diese Integration fragt alle zehn Sekunden ab.
+
+Vor dem Installieren holt die Integration einmal eine frische Liste, dann
+startet das Geraet neu und installiert. Nach etwa einer Minute meldet es sich
+mit der neuen Version zurueck.
+
 ### Sensoren
 
 | Entität | Inhalt |

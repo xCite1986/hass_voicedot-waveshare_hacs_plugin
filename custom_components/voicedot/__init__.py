@@ -22,6 +22,7 @@ PLATFORMS: list[Platform] = [
     Platform.SWITCH,
     Platform.SELECT,
     Platform.BUTTON,
+    Platform.UPDATE,
 ]
 
 ANNOUNCE_SCHEMA = vol.Schema(
