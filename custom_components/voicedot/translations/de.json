@@ -32,6 +32,50 @@
           "description": "Der zu sprechende Text."
         }
       }
+    },
+    "set_alarm": {
+      "name": "Wecker stellen",
+      "description": "Stellt den Wecker am Gerät selbst. Er läutet auch dann, wenn Home Assistant gerade nicht erreichbar ist.",
+      "fields": {
+        "time": {
+          "name": "Weckzeit",
+          "description": "Uhrzeit, zu der geweckt wird."
+        },
+        "daily": {
+          "name": "Täglich",
+          "description": "Jeden Tag wecken statt nur einmal."
+        }
+      }
+    },
+    "clear_alarm": {
+      "name": "Wecker löschen",
+      "description": "Nimmt einen gestellten Wecker wieder zurück.",
+      "fields": {}
+    },
+    "start_timer": {
+      "name": "Timer stellen",
+      "description": "Startet einen Timer am Gerät, zwischen fünf Sekunden und zwölf Stunden.",
+      "fields": {
+        "duration": {
+          "name": "Dauer",
+          "description": "Wie lange der Timer läuft."
+        }
+      }
+    },
+    "clear_timer": {
+      "name": "Timer löschen",
+      "description": "Bricht einen laufenden Timer ab.",
+      "fields": {}
+    },
+    "speak_briefing": {
+      "name": "Briefing sprechen",
+      "description": "Lässt das Gerät das Morning Briefing sofort abfragen und sprechen.",
+      "fields": {
+        "text": {
+          "name": "Anweisung",
+          "description": "Abweichende Anweisung an die Assist-Pipeline."
+        }
+      }
     }
   },
   "options": {

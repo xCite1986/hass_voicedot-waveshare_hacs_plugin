@@ -22,6 +22,30 @@ class VoiceDotSwitchDescription(SwitchEntityDescription):
     api_key: str
 
 
+@dataclass(frozen=True, kw_only=True)
+class VoiceDotStatusSwitchDescription(SwitchEntityDescription):
+    """A switch whose value comes from the status, not from the settings.
+
+    The alarm clock is not part of /api/config - it lives in its own endpoint
+    because a wake time has to survive being set by voice as well.
+    """
+
+    value: Callable[[dict], bool | None]
+    write: Callable[[VoiceDotCoordinator, bool], object]
+
+
+STATUS_SWITCHES: tuple[VoiceDotStatusSwitchDescription, ...] = (
+    VoiceDotStatusSwitchDescription(
+        key="alarm_daily",
+        name="Wecker täglich",
+        icon="mdi:calendar-refresh",
+        entity_category=EntityCategory.CONFIG,
+        value=lambda d: (d.get("alarm") or {}).get("daily"),
+        write=lambda c, on: c.client.set_alarm_daily(on),
+    ),
+)
+
+
 SWITCHES: tuple[VoiceDotSwitchDescription, ...] = (
     VoiceDotSwitchDescription(
         key="wake_word", name="Wake-Word", icon="mdi:ear-hearing",
@@ -74,7 +98,9 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     coordinator: VoiceDotCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities(VoiceDotSwitch(coordinator, desc) for desc in SWITCHES)
+    entities: list[SwitchEntity] = [VoiceDotSwitch(coordinator, desc) for desc in SWITCHES]
+    entities += [VoiceDotStatusSwitch(coordinator, desc) for desc in STATUS_SWITCHES]
+    async_add_entities(entities)
 
 
 class VoiceDotSwitch(VoiceDotEntity, SwitchEntity):
@@ -98,3 +124,27 @@ class VoiceDotSwitch(VoiceDotEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs) -> None:
         await self._write(False)
+
+
+class VoiceDotStatusSwitch(VoiceDotEntity, SwitchEntity):
+    entity_description: VoiceDotStatusSwitchDescription
+
+    def __init__(
+        self, coordinator: VoiceDotCoordinator, description: VoiceDotStatusSwitchDescription
+    ) -> None:
+        super().__init__(coordinator, description.key)
+        self.entity_description = description
+
+    @property
+    def is_on(self) -> bool | None:
+        return self.entity_description.value(self.coordinator.data or {})
+
+    async def async_turn_on(self, **kwargs) -> None:
+        await self.coordinator.async_command(
+            self.entity_description.write(self.coordinator, True)
+        )
+
+    async def async_turn_off(self, **kwargs) -> None:
+        await self.coordinator.async_command(
+            self.entity_description.write(self.coordinator, False)
+        )

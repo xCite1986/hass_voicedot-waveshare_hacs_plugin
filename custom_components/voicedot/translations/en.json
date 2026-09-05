@@ -32,6 +32,50 @@
           "description": "The text to speak."
         }
       }
+    },
+    "set_alarm": {
+      "name": "Set alarm",
+      "description": "Sets the alarm clock on the device itself.",
+      "fields": {
+        "time": {
+          "name": "Time",
+          "description": "When to wake up."
+        },
+        "daily": {
+          "name": "Daily",
+          "description": "Repeat every day."
+        }
+      }
+    },
+    "clear_alarm": {
+      "name": "Clear alarm",
+      "description": "Removes a set alarm.",
+      "fields": {}
+    },
+    "start_timer": {
+      "name": "Start timer",
+      "description": "Starts a timer on the device, five seconds to twelve hours.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "How long the timer runs."
+        }
+      }
+    },
+    "clear_timer": {
+      "name": "Clear timer",
+      "description": "Stops a running timer.",
+      "fields": {}
+    },
+    "speak_briefing": {
+      "name": "Speak briefing",
+      "description": "Has the device fetch and speak the morning briefing now.",
+      "fields": {
+        "text": {
+          "name": "Instruction",
+          "description": "A different instruction for the pipeline."
+        }
+      }
     }
   },
   "options": {

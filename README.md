@@ -74,6 +74,13 @@ mit der neuen Version zurueck.
 | Entität | Inhalt |
 |---|---|
 | Status | `idle`, `listening`, `thinking`, `speaking`, `error` |
+| **Wecker** | Zeitstempel des nächsten Weckens, sonst leer |
+| **Timer** | Zeitstempel des Ablaufs, sonst leer |
+| **Gruppen** | Anzahl der angelegten Gruppen |
+| Radio | laufender Sender oder `aus` |
+| Lautstärke-Anhebung | dB, die der Umgebungslärm gerade zulegt |
+| Nachbar-VoiceDots | wie viele andere Geräte sich melden |
+| Leuchtring | aktuelle Phase des LED-Rings |
 | Letzte Frage | Transkript der letzten Aufnahme |
 | Letzte Antwort | Antwort des Assistenten |
 | Stichwort | aktuell aktives Wake-Word |
@@ -85,6 +92,17 @@ mit der neuen Version zurueck.
 Der vollständige Text von Frage und Antwort steht im Attribut `full_text` —
 der Zustand selbst ist in Home Assistant auf 255 Zeichen begrenzt.
 
+**Wecker und Timer sind Zeitstempel**, keine Restzeiten: damit lässt sich in
+einer Automation direkt auf den Zeitpunkt triggern, und die Oberfläche zählt
+von selbst herunter. Weckzeit, Weckton, Briefing und die Restsekunden stehen
+zusätzlich in den Attributen.
+
+Das Gerät meldet die *verbleibenden* Sekunden, der Zeitpunkt wird also alle
+zehn Sekunden neu ausgerechnet und läge jedesmal eine Sekunde daneben.
+Abweichungen unter fünf Sekunden werden deshalb verworfen — ein laufender
+Timer behält das Ende, das er bekommen hat, statt den Verlauf mit
+Sekundensprüngen zu füllen.
+
 ### Steuerung
 
 | Entität | Funktion |
@@ -95,7 +113,10 @@ der Zustand selbst ist in Home Assistant auf 255 Zeichen begrenzt.
 | Stichwort | Auswahl aus den Modellen der Partition |
 | Assist-Pipeline | Auswahl aus den Pipelines in Home Assistant |
 | Ansage nach Wake-Word, Automatisches Satzende, Rückfragen fortsetzen, Tag/Nacht-Profil, Markdown entfernen | ein/aus |
+| Lautstärke nach Umgebungslärm, Selbst nach Updates sehen, Aushandlung mit anderen VoiceDots | ein/aus |
+| **Wecker täglich** | ein/aus |
 | Assist starten, Ansage anhören, Ansagen erzeugen, Lautsprecher testen, Neu starten | Aktionen |
+| **Wecker löschen, Timer löschen, Briefing sprechen** | Aktionen |
 
 ---
 
@@ -130,6 +151,56 @@ Assist-Pipeline, die Ansage klingt also wie der Assistent selbst.
 
 ---
 
+## Wecker, Timer und Briefing
+
+Beides läuft **auf dem Gerät**, nicht in Home Assistant: der Wecker klingelt
+auch dann, wenn HA gerade neu startet oder das Netz weg ist. Die Integration
+zeigt den Zustand und kann stellen und löschen.
+
+```yaml
+action: voicedot.set_alarm
+target:
+  device_id: <dein VoiceDot>
+data:
+  time: "06:45"
+  daily: true
+```
+
+```yaml
+action: voicedot.start_timer
+target:
+  device_id: <dein VoiceDot>
+data:
+  duration: "00:10:00"
+```
+
+Dazu `voicedot.clear_alarm` und `voicedot.clear_timer`, beide ohne Felder.
+
+`voicedot.speak_briefing` lässt das Morning Briefing sofort abfragen und
+sprechen. Ohne eigenen Text nimmt das Gerät die Anweisung, die in seinem
+Webinterface hinterlegt ist — das Briefing ist **kein fester Text, sondern
+eine Aufgabe an die Assist-Pipeline**, das Sprachmodell holt sich Wetter und
+Kalender selbst.
+
+```yaml
+action: voicedot.speak_briefing
+target:
+  device_id: <dein VoiceDot>
+data:
+  text: "Fasse die Termine von morgen kurz zusammen."
+```
+
+Gestellt wird sonst per Sprache am Gerät („stelle den Wecker auf sieben Uhr
+dreißig", „stelle den Timer auf zehn Minuten", „wie lange noch?"). Weckton und
+Timer-Ton werden im Webinterface des Geräts gewählt, weil dort auch die Klänge
+liegen.
+
+**Gruppen** („schalte im Obergeschoß das Licht aus") wertet das Gerät selbst
+aus; die Integration zeigt sie nur an. Gepflegt werden sie im Webinterface,
+weil dort die Entitätensuche sitzt.
+
+---
+
 ## Wie es arbeitet
 
 Die Integration fragt alle 10 Sekunden `/api/status` und `/api/config` ab
@@ -149,3 +220,7 @@ hinterherhinkt.
   Multicast hilft die manuelle Eingabe.
 - Änderungen, die im Webinterface des Geräts vorgenommen werden, erscheinen
   hier mit bis zu 10 Sekunden Verzögerung.
+- Wecker und Timer lassen sich hier stellen und löschen, aber ihre Klänge nur
+  im Webinterface auswählen — die Liste der Klänge liegt hinter einem eigenen
+  Endpunkt und wäre bei jeder Abfrage mitzuladen.
+- Gruppen werden angezeigt, aber nicht bearbeitet.

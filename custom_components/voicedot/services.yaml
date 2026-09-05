@@ -14,3 +14,71 @@ announce:
       example: "DING DONG! Es hat geläutet"
       selector:
         text:
+
+set_alarm:
+  name: Wecker stellen
+  description: >-
+    Stellt den Wecker am Gerät selbst. Er läutet auch dann, wenn Home Assistant
+    gerade nicht erreichbar ist.
+  target:
+    device:
+      integration: voicedot
+  fields:
+    time:
+      name: Weckzeit
+      description: Uhrzeit, zu der geweckt wird.
+      required: true
+      example: "06:45"
+      selector:
+        time:
+    daily:
+      name: Täglich
+      description: Jeden Tag wecken statt nur einmal.
+      selector:
+        boolean:
+
+clear_alarm:
+  name: Wecker löschen
+  description: Nimmt einen gestellten Wecker wieder zurück.
+  target:
+    device:
+      integration: voicedot
+
+start_timer:
+  name: Timer stellen
+  description: >-
+    Startet einen Timer am Gerät. Zwischen fünf Sekunden und zwölf Stunden.
+  target:
+    device:
+      integration: voicedot
+  fields:
+    duration:
+      name: Dauer
+      description: Wie lange der Timer läuft.
+      required: true
+      example: "00:10:00"
+      selector:
+        duration:
+
+clear_timer:
+  name: Timer löschen
+  description: Bricht einen laufenden Timer ab.
+  target:
+    device:
+      integration: voicedot
+
+speak_briefing:
+  name: Briefing sprechen
+  description: >-
+    Lässt das Gerät das Morning Briefing sofort abfragen und sprechen. Ohne
+    eigenen Text wird die im Webinterface hinterlegte Anweisung verwendet.
+  target:
+    device:
+      integration: voicedot
+  fields:
+    text:
+      name: Anweisung
+      description: Abweichende Anweisung an die Assist-Pipeline.
+      example: "Fasse die Termine von morgen zusammen."
+      selector:
+        text:

@@ -25,6 +25,27 @@ API_RADIO_PLAY = "/api/radio/play"
 API_RADIO_STOP = "/api/radio/stop"
 API_UPDATE_CHECK = "/api/update/check"
 API_UPDATE_INSTALL = "/api/update/install"
+API_ALARM = "/api/alarm"
+API_TIMER = "/api/timer"
+API_BRIEFING_TEST = "/api/alarm/briefing-test"
 
 SERVICE_ANNOUNCE = "announce"
+SERVICE_SET_ALARM = "set_alarm"
+SERVICE_CLEAR_ALARM = "clear_alarm"
+SERVICE_START_TIMER = "start_timer"
+SERVICE_CLEAR_TIMER = "clear_timer"
+SERVICE_SPEAK_BRIEFING = "speak_briefing"
+
+SERVICES = (
+    SERVICE_ANNOUNCE,
+    SERVICE_SET_ALARM,
+    SERVICE_CLEAR_ALARM,
+    SERVICE_START_TIMER,
+    SERVICE_CLEAR_TIMER,
+    SERVICE_SPEAK_BRIEFING,
+)
+
 ATTR_TEXT = "text"
+ATTR_TIME = "time"
+ATTR_DAILY = "daily"
+ATTR_DURATION = "duration"

@@ -43,6 +43,18 @@ BUTTONS: tuple[VoiceDotButtonDescription, ...] = (
         action=lambda c: c.client.update_check(), entity_category=EntityCategory.CONFIG,
     ),
     VoiceDotButtonDescription(
+        key="alarm_clear", name="Wecker löschen", icon="mdi:alarm-off",
+        action=lambda c: c.client.clear_alarm(),
+    ),
+    VoiceDotButtonDescription(
+        key="timer_clear", name="Timer löschen", icon="mdi:timer-off",
+        action=lambda c: c.client.clear_timer(),
+    ),
+    VoiceDotButtonDescription(
+        key="briefing", name="Briefing sprechen", icon="mdi:weather-sunset-up",
+        action=lambda c: c.client.speak_briefing(),
+    ),
+    VoiceDotButtonDescription(
         key="reboot", name="Neu starten", icon="mdi:restart",
         action=lambda c: c.client.reboot(), entity_category=EntityCategory.DIAGNOSTIC,
     ),

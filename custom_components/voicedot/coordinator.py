@@ -15,7 +15,9 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .const import (
     API_ACK_BUILD,
     API_ACK_TEST,
+    API_ALARM,
     API_ANNOUNCE,
+    API_BRIEFING_TEST,
     API_CONFIG,
     API_REBOOT,
     API_RADIO_PLAY,
@@ -25,6 +27,7 @@ from .const import (
     API_RUNTIME,
     API_SPEAKER_TEST,
     API_STATUS,
+    API_TIMER,
     API_VOLUME,
     API_WAKE,
     DEFAULT_SCAN_INTERVAL,
@@ -105,6 +108,28 @@ class VoiceDotClient:
 
     async def update_install(self, tag: str) -> str:
         return await self._post(API_UPDATE_INSTALL, {"tag": tag})
+
+    async def set_alarm(self, time: str, daily: bool | None = None) -> str:
+        data: dict[str, Any] = {"time": time}
+        if daily is not None:
+            data["daily"] = "1" if daily else "0"
+        return await self._post(API_ALARM, data)
+
+    async def set_alarm_daily(self, daily: bool) -> str:
+        return await self._post(API_ALARM, {"daily": "1" if daily else "0"})
+
+    async def clear_alarm(self) -> str:
+        return await self._post(API_ALARM, {"clear": "1"})
+
+    async def start_timer(self, seconds: int) -> str:
+        return await self._post(API_TIMER, {"seconds": str(int(seconds))})
+
+    async def clear_timer(self) -> str:
+        return await self._post(API_TIMER, {"clear": "1"})
+
+    async def speak_briefing(self, text: str | None = None) -> str:
+        # Without a text the device falls back to the briefing it has stored.
+        return await self._post(API_BRIEFING_TEST, {"text": text} if text else None)
 
 
 class VoiceDotCoordinator(DataUpdateCoordinator[dict[str, Any]]):
