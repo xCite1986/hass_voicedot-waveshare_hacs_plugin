@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
@@ -22,6 +24,8 @@ async def async_setup_entry(
             VoiceDotWakeWordSelect(coordinator),
             VoiceDotPipelineSelect(coordinator),
             VoiceDotRadioSelect(coordinator),
+            VoiceDotAlarmSoundSelect(coordinator),
+            VoiceDotTimerSoundSelect(coordinator),
         ]
     )
 
@@ -147,3 +151,69 @@ class VoiceDotRadioSelect(VoiceDotEntity, SelectEntity):
             await self.coordinator.async_command(self.coordinator.client.radio_stop())
             return
         await self.coordinator.async_command(self.coordinator.client.radio_play(option))
+
+
+class _VoiceDotSoundSelect(VoiceDotEntity, SelectEntity):
+    """Picks a tone from the device's uploaded sound library.
+
+    The list of files comes from /api/status, so no extra request is needed;
+    "Standard" maps to an empty name, which puts the device back on its built-in
+    behaviour (a spoken timer, a silent-or-briefing alarm).
+    """
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    DEFAULT = "Standard"
+    _status_key = ""  # "alarm" or "timer"
+
+    def _sounds(self) -> list[str]:
+        return list((self.coordinator.data or {}).get("sounds") or [])
+
+    def _current_sound(self) -> str:
+        node = (self.coordinator.data or {}).get(self._status_key) or {}
+        return node.get("sound") or ""
+
+    @property
+    def options(self) -> list[str]:
+        opts = [self.DEFAULT] + self._sounds()
+        # A tone that is still selected but no longer on the device keeps its
+        # slot, so the picker never rejects the device's own current value.
+        current = self._current_sound()
+        if current and current not in opts:
+            opts.append(current)
+        return opts
+
+    @property
+    def current_option(self) -> str | None:
+        return self._current_sound() or self.DEFAULT
+
+    def _command(self, name: str) -> Any:
+        raise NotImplementedError
+
+    async def async_select_option(self, option: str) -> None:
+        name = "" if option == self.DEFAULT else option
+        await self.coordinator.async_command(self._command(name))
+
+
+class VoiceDotAlarmSoundSelect(_VoiceDotSoundSelect):
+    _attr_name = "Weckton"
+    _attr_icon = "mdi:alarm-note"
+    _status_key = "alarm"
+
+    def __init__(self, coordinator: VoiceDotCoordinator) -> None:
+        super().__init__(coordinator, "alarm_sound")
+
+    def _command(self, name: str) -> Any:
+        return self.coordinator.client.set_alarm_sound(name)
+
+
+class VoiceDotTimerSoundSelect(_VoiceDotSoundSelect):
+    _attr_name = "Timer-Ton"
+    _attr_icon = "mdi:timer-music"
+    _status_key = "timer"
+
+    def __init__(self, coordinator: VoiceDotCoordinator) -> None:
+        super().__init__(coordinator, "timer_sound")
+
+    def _command(self, name: str) -> Any:
+        return self.coordinator.client.set_timer_sound(name)

@@ -121,11 +121,20 @@ class VoiceDotClient:
     async def clear_alarm(self) -> str:
         return await self._post(API_ALARM, {"clear": "1"})
 
+    async def set_alarm_sound(self, name: str) -> str:
+        # An empty name resets the device to its built-in default.
+        return await self._post(API_ALARM, {"sound": name})
+
     async def start_timer(self, seconds: int) -> str:
         return await self._post(API_TIMER, {"seconds": str(int(seconds))})
 
     async def clear_timer(self) -> str:
         return await self._post(API_TIMER, {"clear": "1"})
+
+    async def set_timer_sound(self, name: str) -> str:
+        # Setting only the sound leaves any running timer untouched; an empty
+        # name falls back to the spoken "Timer abgelaufen".
+        return await self._post(API_TIMER, {"sound": name})
 
     async def speak_briefing(self, text: str | None = None) -> str:
         # Without a text the device falls back to the briefing it has stored.
