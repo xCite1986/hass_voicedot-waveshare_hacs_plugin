@@ -19,9 +19,12 @@ from .const import (
     API_ANNOUNCE,
     API_BRIEFING_TEST,
     API_CONFIG,
+    API_MUTE,
+    API_PIPELINES,
     API_REBOOT,
     API_RADIO_PLAY,
     API_RADIO_STOP,
+    API_SOUND_PLAY,
     API_UPDATE_CHECK,
     API_UPDATE_INSTALL,
     API_RUNTIME,
@@ -76,6 +79,9 @@ class VoiceDotClient:
     async def set_volume(self, percent: int) -> str:
         return await self._post(API_VOLUME, {"percent": int(percent)})
 
+    async def set_mute(self, on: bool) -> str:
+        return await self._post(API_MUTE, {"on": "1" if on else "0"})
+
     async def set_runtime(self, **values: Any) -> str:
         return await self._post(API_RUNTIME, {k: str(v) for k, v in values.items()})
 
@@ -103,6 +109,12 @@ class VoiceDotClient:
     async def radio_stop(self) -> str:
         return await self._post(API_RADIO_STOP)
 
+    async def play_sound(self, name: str) -> str:
+        return await self._post(API_SOUND_PLAY, {"name": name})
+
+    async def refresh_pipelines(self) -> str:
+        return await self._post(API_PIPELINES)
+
     async def update_check(self) -> str:
         return await self._post(API_UPDATE_CHECK)
 
@@ -120,6 +132,10 @@ class VoiceDotClient:
 
     async def clear_alarm(self) -> str:
         return await self._post(API_ALARM, {"clear": "1"})
+
+    async def set_alarm_briefing(self, text: str) -> str:
+        # An empty text turns the spoken briefing off again.
+        return await self._post(API_ALARM, {"briefing": text})
 
     async def set_alarm_sound(self, name: str) -> str:
         # An empty name resets the device to its built-in default.

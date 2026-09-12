@@ -76,6 +76,16 @@
           "description": "A different instruction for the pipeline."
         }
       }
+    },
+    "play_sound": {
+      "name": "Play sound",
+      "description": "Plays a file from the device's sound library.",
+      "fields": {
+        "name": {
+          "name": "File name",
+          "description": "Name of the file to play, e.g. \"gong.mp3\"."
+        }
+      }
     }
   },
   "options": {

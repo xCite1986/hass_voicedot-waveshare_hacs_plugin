@@ -107,6 +107,14 @@ SENSORS: tuple[VoiceDotSensorDescription, ...] = (
         ),
     ),
     VoiceDotSensorDescription(
+        key="sounds",
+        name="Sounds",
+        icon="mdi:folder-music",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value=lambda d: len(d.get("sounds") or []),
+        attributes=lambda d: {"dateien": d.get("sounds") or []},
+    ),
+    VoiceDotSensorDescription(
         key="volume_boost",
         name="Lautstärke-Anhebung",
         icon="mdi:volume-plus",

@@ -15,6 +15,7 @@ from homeassistant.helpers import device_registry as dr
 from .const import (
     ATTR_DAILY,
     ATTR_DURATION,
+    ATTR_NAME,
     ATTR_TEXT,
     ATTR_TIME,
     CONF_HOST,
@@ -22,6 +23,7 @@ from .const import (
     SERVICE_ANNOUNCE,
     SERVICE_CLEAR_ALARM,
     SERVICE_CLEAR_TIMER,
+    SERVICE_PLAY_SOUND,
     SERVICE_SET_ALARM,
     SERVICE_SPEAK_BRIEFING,
     SERVICE_START_TIMER,
@@ -37,6 +39,7 @@ PLATFORMS: list[Platform] = [
     Platform.SWITCH,
     Platform.SELECT,
     Platform.BUTTON,
+    Platform.TEXT,
     Platform.UPDATE,
 ]
 
@@ -60,6 +63,8 @@ START_TIMER_SCHEMA = vol.Schema(
 )
 
 BRIEFING_SCHEMA = vol.Schema({vol.Optional(ATTR_TEXT): cv.string, **TARGET_SCHEMA})
+
+PLAY_SOUND_SCHEMA = vol.Schema({vol.Required(ATTR_NAME): cv.string, **TARGET_SCHEMA})
 
 PLAIN_SCHEMA = vol.Schema(TARGET_SCHEMA)
 
@@ -145,6 +150,10 @@ def _register_services(hass: HomeAssistant) -> None:
         text = call.data.get(ATTR_TEXT)
         await _run(call, "Briefing", lambda c: c.client.speak_briefing(text))
 
+    async def _handle_play_sound(call: ServiceCall) -> None:
+        name = call.data[ATTR_NAME]
+        await _run(call, "Sound abspielen", lambda c: c.client.play_sound(name))
+
     for service, handler, schema in (
         (SERVICE_ANNOUNCE, _handle_announce, ANNOUNCE_SCHEMA),
         (SERVICE_SET_ALARM, _handle_set_alarm, SET_ALARM_SCHEMA),
@@ -152,6 +161,7 @@ def _register_services(hass: HomeAssistant) -> None:
         (SERVICE_START_TIMER, _handle_start_timer, START_TIMER_SCHEMA),
         (SERVICE_CLEAR_TIMER, _handle_clear_timer, PLAIN_SCHEMA),
         (SERVICE_SPEAK_BRIEFING, _handle_speak_briefing, BRIEFING_SCHEMA),
+        (SERVICE_PLAY_SOUND, _handle_play_sound, PLAY_SOUND_SCHEMA),
     ):
         hass.services.async_register(DOMAIN, service, handler, schema)
 

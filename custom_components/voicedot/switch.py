@@ -43,6 +43,13 @@ STATUS_SWITCHES: tuple[VoiceDotStatusSwitchDescription, ...] = (
         value=lambda d: (d.get("alarm") or {}).get("daily"),
         write=lambda c, on: c.client.set_alarm_daily(on),
     ),
+    VoiceDotStatusSwitchDescription(
+        key="mute",
+        name="Stumm",
+        icon="mdi:volume-mute",
+        value=lambda d: d.get("muted"),
+        write=lambda c, on: c.client.set_mute(on),
+    ),
 )
 
 

@@ -82,3 +82,21 @@ speak_briefing:
       example: "Fasse die Termine von morgen zusammen."
       selector:
         text:
+
+play_sound:
+  name: Sound abspielen
+  description: >-
+    Spielt eine Datei aus der Sound-Library des Geräts ab. Die verfügbaren
+    Namen stehen im Attribut des Sensors "Sounds". Ohne Ziel spielen alle
+    bekannten Geräte.
+  target:
+    device:
+      integration: voicedot
+  fields:
+    name:
+      name: Dateiname
+      description: Name der abzuspielenden Datei, z. B. "gong.mp3".
+      required: true
+      example: "gong.mp3"
+      selector:
+        text:

@@ -28,6 +28,9 @@ API_UPDATE_INSTALL = "/api/update/install"
 API_ALARM = "/api/alarm"
 API_TIMER = "/api/timer"
 API_BRIEFING_TEST = "/api/alarm/briefing-test"
+API_MUTE = "/api/mute"
+API_SOUND_PLAY = "/api/sound/play"
+API_PIPELINES = "/api/ha/pipelines"
 
 SERVICE_ANNOUNCE = "announce"
 SERVICE_SET_ALARM = "set_alarm"
@@ -35,6 +38,7 @@ SERVICE_CLEAR_ALARM = "clear_alarm"
 SERVICE_START_TIMER = "start_timer"
 SERVICE_CLEAR_TIMER = "clear_timer"
 SERVICE_SPEAK_BRIEFING = "speak_briefing"
+SERVICE_PLAY_SOUND = "play_sound"
 
 SERVICES = (
     SERVICE_ANNOUNCE,
@@ -43,9 +47,11 @@ SERVICES = (
     SERVICE_START_TIMER,
     SERVICE_CLEAR_TIMER,
     SERVICE_SPEAK_BRIEFING,
+    SERVICE_PLAY_SOUND,
 )
 
 ATTR_TEXT = "text"
 ATTR_TIME = "time"
 ATTR_DAILY = "daily"
 ATTR_DURATION = "duration"
+ATTR_NAME = "name"

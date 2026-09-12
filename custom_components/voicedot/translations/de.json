@@ -76,6 +76,16 @@
           "description": "Abweichende Anweisung an die Assist-Pipeline."
         }
       }
+    },
+    "play_sound": {
+      "name": "Sound abspielen",
+      "description": "Spielt eine Datei aus der Sound-Library des Geräts ab.",
+      "fields": {
+        "name": {
+          "name": "Dateiname",
+          "description": "Name der abzuspielenden Datei, z. B. \"gong.mp3\"."
+        }
+      }
     }
   },
   "options": {
