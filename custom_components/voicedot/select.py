@@ -26,8 +26,46 @@ async def async_setup_entry(
             VoiceDotRadioSelect(coordinator),
             VoiceDotAlarmSoundSelect(coordinator),
             VoiceDotTimerSoundSelect(coordinator),
+            VoiceDotRoleSelect(coordinator),
         ]
     )
+
+
+class VoiceDotRoleSelect(VoiceDotEntity, SelectEntity):
+    """The device's role in a multi-device setup.
+
+    A satellite records but plays nothing - it hands its output to the master.
+    Standalone is a normal lone device.
+    """
+
+    _attr_name = "Rolle"
+    _attr_icon = "mdi:speaker-multiple"
+    _attr_entity_category = EntityCategory.CONFIG
+
+    # Order matches the firmware's numeric device_role.
+    ROLES = ["Eigenständig", "Satellit", "Master"]
+
+    def __init__(self, coordinator: VoiceDotCoordinator) -> None:
+        super().__init__(coordinator, "device_role")
+
+    @property
+    def options(self) -> list[str]:
+        return list(self.ROLES)
+
+    @property
+    def current_option(self) -> str | None:
+        role = self.coordinator.config.get("device_role")
+        try:
+            return self.ROLES[int(role)]
+        except (TypeError, ValueError, IndexError):
+            return self.ROLES[0]
+
+    async def async_select_option(self, option: str) -> None:
+        if option not in self.ROLES:
+            return
+        await self.coordinator.async_command(
+            self.coordinator.client.set_config(device_role=self.ROLES.index(option))
+        )
 
 
 class VoiceDotWakeWordSelect(VoiceDotEntity, SelectEntity):
