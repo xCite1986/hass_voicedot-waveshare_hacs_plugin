@@ -69,6 +69,11 @@ SWITCHES: tuple[VoiceDotSwitchDescription, ...] = (
         entity_category=EntityCategory.CONFIG,
     ),
     VoiceDotSwitchDescription(
+        key="barge_in", name="Sofort weitersprechen", icon="mdi:account-voice",
+        config_key="barge_in", api_key="barge_in",
+        entity_category=EntityCategory.CONFIG,
+    ),
+    VoiceDotSwitchDescription(
         key="follow_up", name="Rückfragen fortsetzen", icon="mdi:comment-question",
         config_key="follow_up", api_key="follow_up",
         entity_category=EntityCategory.CONFIG,
